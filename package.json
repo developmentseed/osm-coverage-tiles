@@ -7,16 +7,19 @@
     "osmpt": "index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --single-quote --write --print-width 120  *.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@mapbox/tile-cover": "^3.0.2",
     "@mapbox/tile-reduce": "^3.3.0",
-    "@turf/bbox": "^6.0.1",
     "@turf/turf": "^5.1.6",
     "minimist": "^1.2.0",
     "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "prettier": "^1.11.1"
   }
 }

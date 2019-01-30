@@ -5,18 +5,16 @@ const tileReduce = require('@mapbox/tile-reduce');
 var path = require('path');
 
 tileReduce({
-    bbox: argv.bbox,
-    zoom: argv.zoom,
-    map: path.join(__dirname, '/map.js'),
-    sources: [
-        {
-            name: 'osm',
-            mbtiles: argv._[0],
-            raw: false
-        }
-    ]
+  bbox: argv.bbox,
+  zoom: argv.zoom,
+  map: path.join(__dirname, '/map.js'),
+  sources: [
+    {
+      name: 'osm',
+      mbtiles: argv._[0],
+      raw: false
+    }
+  ]
 })
-    .on('reduce', function () { })
-    .on('end', function () {
-        
-    });
+  .on('reduce', function() {})
+  .on('end', function() {});
