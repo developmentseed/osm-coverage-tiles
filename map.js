@@ -4,7 +4,7 @@ const turf = require('@turf/turf');
 const _ = require('underscore');
 const cover = require('@mapbox/tile-cover');
 
-module.exports = function (tileLayers, tile, writeData, done) {
+module.exports = function(tileLayers, tile, writeData, done) {
   const layer = tileLayers.osm.osm;
   let buildingArea = 0;
   let highwayDistance = 0;
@@ -55,12 +55,12 @@ module.exports = function (tileLayers, tile, writeData, done) {
     }
   }
 
-  // if (buildingArea > 0 || highwayDistance > 0) {
-  result.properties.area = buildingArea;
-  result.properties.distance = highwayDistance;
-  result.properties.tile = tile;
-  writeData(JSON.stringify(result) + '\n');
-  // }
+  if (buildingArea > 0 || highwayDistance > 0) {
+    result.properties.area = buildingArea;
+    result.properties.distance = highwayDistance;
+    result.properties.tile = tile;
+    writeData(JSON.stringify(result) + '\n');
+  }
   done(null, null);
 };
 
