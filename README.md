@@ -17,7 +17,7 @@ osmcov <file.mbtiles> --zoom=15 > output.json
 # Installation
 
 ```
-$ git clone git@github.com:Rub21/osm-population-tiles.git
-$ cd osm-population-tiles/
+$ git clone https://github.com/developmentseed/osm-coverage-tiles.git
+$ cd osm-coverage-tiles/
 $ npm link
 ```
