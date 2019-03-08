@@ -16,7 +16,7 @@ $ npm link
 ## Usage
 
 ```
-osmcov <file.mbtiles> --zoom=15 > output.json
+$ osmcov <file.mbtiles> --zoom=15 > output.json
 ```
 
 #### Arguments
@@ -43,5 +43,5 @@ $ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest tippecanoe -
 The output of `osmcov` command is a json file, which needs to cover into a geojson file, for it we use the [geokit](https://github.com/developmentseed/geokit).
 
 ```
-docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest geokit jsonlines2geojson output.json > colombia-tiles.geojsons
+$ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest geokit jsonlines2geojson output.json > colombia-tiles.geojson
 ```
