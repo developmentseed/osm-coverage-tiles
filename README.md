@@ -36,6 +36,7 @@ For creating the mbtiles is necesary to use [minjur](https://github.com/mapbox/m
 $ wget http://download.geofabrik.de/south-america/colombia-latest.osm.bz2
 $ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest minjur colombia-latest.osm.bz2 > colombia.geojson
 $ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest tippecanoe -l osm -n osm-latest -o colombia.mbtiles -z15 -Z15 -psfk colombia.geojson
+docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest osmcov colombia.mbtiles --zoom=15 > colombia-output.json
 ```
 
 ## *Note*
@@ -43,5 +44,6 @@ $ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest tippecanoe -
 The output of `osmcov` command is a json file, which needs to cover into a geojson file, for it we use the [geokit](https://github.com/developmentseed/geokit).
 
 ```
-$ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest geokit jsonlines2geojson output.json > colombia-tiles.geojson
+$ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest geokit osmcov <file.mbtiles> --zoom=15 > colombia-output.json
+$ docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:latest geokit jsonlines2geojson colombia-output.json > colombia-tiles.geojson
 ```
