@@ -14,7 +14,10 @@ tileReduce({
       mbtiles: argv._[0],
       raw: false
     }
-  ]
+  ],
+  mapOptions: {
+		objectTypes: argv.types
+	}
 })
   .on('reduce', function() {})
   .on('end', function() {});
