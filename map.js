@@ -31,14 +31,13 @@ module.exports = function(tileLayers, tile, writeData, done) {
     /**
      * Get the area for building in km2
      */
-    const coordinates = feature.geometry.coordinates;
+    const coordinates = feature.geometry.coordinates[0];
     if (
       feature.properties.building &&
-      coordinates.length > 4 &&
-      _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length == 2
+      coordinates.length >= 3 &&
+      _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length === 2
     ) {
-      const polygon = turf.lineToPolygon(feature);
-      buildingArea += turf.area(polygon);
+      buildingArea += turf.area(feature);
     }
     /**
      * Get the distance for Highways in km
