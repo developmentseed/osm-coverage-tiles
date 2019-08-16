@@ -28,7 +28,7 @@ module.exports = function (tileLayers, tile, writeData, done) {
   objectTypes.forEach(type => {
     result.properties[`${type}-area`] = 0;
     result.properties[`${type}-distance`] = 0;
-    result.properties[`${type}-num`] = 0;
+    result.properties[`${type}-point`] = 0;
   });
 
   for (let i = 0; i < layer.features.length; i++) {
@@ -46,8 +46,15 @@ module.exports = function (tileLayers, tile, writeData, done) {
           result.properties[`${type}-area`] += turf.area(feature) || 0;
         }
         /**
-       * Get the distance in km
-       */
+        * Get the points
+        */
+        if (feature.geometry.type === 'Point'
+        ) {
+          result.properties[`${type}-point`] += 1 || 0;
+        }
+        /**
+        * Get the distance in km
+        */
         if (feature.geometry.type === 'LineString') {
           result.properties[`${type}-distance`] += distance(feature) || 0;
         } else if (feature.geometry.type === 'MultiLineString') {
