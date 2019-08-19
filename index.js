@@ -16,8 +16,8 @@ tileReduce({
     }
   ],
   mapOptions: {
-		objectTypes: argv.types
-	}
+    objectTypes: argv.types
+  }
 })
   .on('reduce', function() {})
   .on('end', function() {});

@@ -16,15 +16,22 @@ $ npm link
 ## Usage
 
 ```
-$ osmcov <file.mbtiles> --zoom=15 --types=feature > output.json
+$ osmcov <file.mbtiles> --zoom=<zoom of the mbtile> --types=<type of osm tags> > output.json
 ```
-
-*--types=feature1,feature2,...* --> The features depend on your necessity, for example, if you want to obtain the tiles where there are buildings, you should put *--types=building* or if you want to obtain for more types, you only should add the type between commas.
 
 #### Arguments
 
 - `zoom`, It should be the same zoom as the MBTiles.
 - `bbox`, You could pass this parameter to reduce the size of evaluation.
+- `type`, type of osm tags, https://taginfo.openstreetmap.org/search
+
+*--types=feature1,feature2,...* --> The features depend on your necessity, for example, if you want to obtain the tiles where there are buildings, you should put *--types=building* or if you want to obtain for more types, you only should add the type between commas.
+
+e.g:
+
+```
+--types=building,highway,leisure
+```
 
 ## Where to get the MBTiles?
 

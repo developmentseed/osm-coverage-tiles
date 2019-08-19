@@ -4,7 +4,7 @@ const turf = require('@turf/turf');
 const _ = require('underscore');
 const cover = require('@mapbox/tile-cover');
 
-module.exports = function (tileLayers, tile, writeData, done) {
+module.exports = function(tileLayers, tile, writeData, done) {
   const layer = tileLayers.osm.osm;
   let result = turf.bboxPolygon(turf.bbox(tileLayers.osm.osm));
   const objectTypes = global.mapOptions.objectTypes.split(',');
@@ -40,21 +40,18 @@ module.exports = function (tileLayers, tile, writeData, done) {
         /**
          * Get the area in km2
          */
-        if (coordinates.length >= 3 &&
-          _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length === 2
-        ) {
+        if (coordinates.length >= 3 && _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length === 2) {
           result.properties[`${type}-area`] += turf.area(feature) || 0;
         }
         /**
-        * Get the points
-        */
-        if (feature.geometry.type === 'Point'
-        ) {
-          result.properties[`${type}-point`] += 1 || 0;
+         * Get the points
+         */
+        if (feature.geometry.type === 'Point') {
+          result.properties[`${type}-point`] += 1;
         }
         /**
-        * Get the distance in km
-        */
+         * Get the distance in km
+         */
         if (feature.geometry.type === 'LineString') {
           result.properties[`${type}-distance`] += distance(feature) || 0;
         } else if (feature.geometry.type === 'MultiLineString') {
