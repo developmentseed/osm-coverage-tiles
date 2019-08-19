@@ -6,9 +6,8 @@ const cover = require('@mapbox/tile-cover');
 
 module.exports = function(tileLayers, tile, writeData, done) {
   const layer = tileLayers.osm.osm;
-  let buildingArea = 0;
-  let highwayDistance = 0;
   let result = turf.bboxPolygon(turf.bbox(tileLayers.osm.osm));
+  const objectTypes = global.mapOptions.objectTypes.split(',');
   /**
    * We are going to need polygon for the tiles,if you want to get bbox that are more precise disable the following code
    */
@@ -26,38 +25,50 @@ module.exports = function(tileLayers, tile, writeData, done) {
     }
   }
 
+  objectTypes.forEach(type => {
+    result.properties[`${type}-area`] = 0;
+    result.properties[`${type}-distance`] = 0;
+    result.properties[`${type}-point`] = 0;
+  });
+
   for (let i = 0; i < layer.features.length; i++) {
     const feature = layer.features[i];
-    /**
-     * Get the area for building in km2
-     */
     const coordinates = feature.geometry.coordinates[0];
-    if (
-      feature.properties.building &&
-      coordinates.length >= 3 &&
-      _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length === 2
-    ) {
-      buildingArea += turf.area(feature);
-    }
-    /**
-     * Get the distance for Highways in km
-     */
-    if (feature.properties.highway) {
-      if (feature.geometry.type === 'LineString') {
-        highwayDistance += distance(feature);
-      } else if (feature.geometry.type === 'MultiLineString') {
-        for (let i = 0; i < feature.geometry.coordinates.length; i++) {
-          const line = turf.lineString(feature.geometry.coordinates[i]);
-          highwayDistance += distance(line) / 1000;
+    for (let indexObj = 0; indexObj < objectTypes.length; indexObj++) {
+      const type = objectTypes[indexObj];
+      if (feature.properties[type]) {
+        /**
+         * Get the area in km2
+         */
+        if (coordinates.length >= 3 && _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length === 2) {
+          result.properties[`${type}-area`] += turf.area(feature) || 0;
+        }
+        /**
+         * Get the points
+         */
+        if (feature.geometry.type === 'Point') {
+          result.properties[`${type}-point`] += 1;
+        }
+        /**
+         * Get the distance in km
+         */
+        if (feature.geometry.type === 'LineString') {
+          result.properties[`${type}-distance`] += distance(feature) || 0;
+        } else if (feature.geometry.type === 'MultiLineString') {
+          for (let i = 0; i < feature.geometry.coordinates.length; i++) {
+            const line = turf.lineString(feature.geometry.coordinates[i]);
+            result.properties[`${type}-distance`] += distance(line) || 0;
+          }
         }
       }
     }
   }
 
-  if (buildingArea > 0 || highwayDistance > 0) {
-    result.properties.area = buildingArea;
-    result.properties.distance = highwayDistance;
-    result.properties.tile = tile;
+  // filter the tiles which does not have any distance or area
+  const values = _.values(result.properties).filter(v => {
+    return v > 0;
+  });
+  if (values.length > 0) {
     writeData(JSON.stringify(result) + '\n');
   }
   done(null, null);
