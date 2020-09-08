@@ -4,7 +4,7 @@ const turf = require('@turf/turf');
 const _ = require('underscore');
 const cover = require('@mapbox/tile-cover');
 
-module.exports = function(tileLayers, tile, writeData, done) {
+module.exports = function (tileLayers, tile, writeData, done) {
   const layer = tileLayers.osm.osm;
   let result = turf.bboxPolygon(turf.bbox(tileLayers.osm.osm));
   const objectTypes = global.mapOptions.objectTypes.split(',');
@@ -25,6 +25,9 @@ module.exports = function(tileLayers, tile, writeData, done) {
     }
   }
 
+  result.properties['tile'] = tile.join('-')
+  result.properties['population'] = 0
+
   objectTypes.forEach(type => {
     result.properties[`${type}-area`] = 0;
     result.properties[`${type}-distance`] = 0;
@@ -33,6 +36,10 @@ module.exports = function(tileLayers, tile, writeData, done) {
 
   for (let i = 0; i < layer.features.length; i++) {
     const feature = layer.features[i];
+    //calculate population
+    if (feature.properties['population']) {
+      result.properties['population'] += feature.properties['population']
+    }
     const coordinates = feature.geometry.coordinates[0];
     for (let indexObj = 0; indexObj < objectTypes.length; indexObj++) {
       const type = objectTypes[indexObj];
@@ -68,7 +75,16 @@ module.exports = function(tileLayers, tile, writeData, done) {
   const values = _.values(result.properties).filter(v => {
     return v > 0;
   });
+
+
   if (values.length > 0) {
+    // Remove unsed attributes
+    _.keys(result.properties).forEach(k => {
+      if (k !== 'tile' && k !== 'population') {
+        delete result.properties[k];
+      }
+    });
+
     writeData(JSON.stringify(result) + '\n');
   }
   done(null, null);
