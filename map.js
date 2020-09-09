@@ -27,12 +27,15 @@ module.exports = function (tileLayers, tile, writeData, done) {
 
   result.properties['tile'] = tile.join('-')
   result.properties['population'] = 0
+  result.properties['area'] = 0
+  result.properties['length'] = 0
+  result.properties['point'] = 0
 
-  objectTypes.forEach(type => {
-    result.properties[`${type}-area`] = 0;
-    result.properties[`${type}-distance`] = 0;
-    result.properties[`${type}-point`] = 0;
-  });
+  // objectTypes.forEach(type => {
+  //   result.properties[`${type}-area`] = 0;
+  //   result.properties[`${type}-distance`] = 0;
+  //   result.properties[`${type}-point`] = 0;
+  // });
 
   for (let i = 0; i < layer.features.length; i++) {
     const feature = layer.features[i];
@@ -48,23 +51,23 @@ module.exports = function (tileLayers, tile, writeData, done) {
          * Get the area in km2
          */
         if (coordinates.length >= 3 && _.flatten(coordinates[0], coordinates[coordinates.length - 1]).length === 2) {
-          result.properties[`${type}-area`] += turf.area(feature) || 0;
+          result.properties[`area`] += turf.area(feature) || 0;
         }
         /**
          * Get the points
          */
         if (feature.geometry.type === 'Point') {
-          result.properties[`${type}-point`] += 1;
+          result.properties[`point`] += 1;
         }
         /**
          * Get the distance in km
          */
         if (feature.geometry.type === 'LineString') {
-          result.properties[`${type}-distance`] += distance(feature) || 0;
+          result.properties[`length`] += distance(feature) || 0;
         } else if (feature.geometry.type === 'MultiLineString') {
           for (let i = 0; i < feature.geometry.coordinates.length; i++) {
             const line = turf.lineString(feature.geometry.coordinates[i]);
-            result.properties[`${type}-distance`] += distance(line) || 0;
+            result.properties[`length`] += distance(line) || 0;
           }
         }
       }
@@ -78,12 +81,19 @@ module.exports = function (tileLayers, tile, writeData, done) {
 
 
   if (values.length > 0) {
-    // Remove unsed attributes
-    _.keys(result.properties).forEach(k => {
-      if (k !== 'tile' && k !== 'population') {
-        delete result.properties[k];
-      }
-    });
+    // // Remove unsed attributes
+    // _.keys(result.properties).forEach(k => {
+    //   if (k !== 'tile' && k !== 'population') {
+    //     if (k.split('-')[1] =='distance'){
+    //       result.properties['length'] += parseFloat(result.properties[''])
+    //       result.properties['point'] = 0
+    //       result.properties['area'] = parseFloat
+
+    //     }
+        
+    //     delete result.properties[k];
+    //   }
+    // });
 
     writeData(JSON.stringify(result) + '\n');
   }
