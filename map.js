@@ -38,7 +38,7 @@ module.exports = function (tileLayers, tile, writeData, done) {
     const feature = layer.features[i];
     //calculate population
     if (feature.properties['population']) {
-      result.properties['population'] += feature.properties['population']
+      result.properties['population'] += parseFloat(feature.properties['population'] + '')
     }
     const coordinates = feature.geometry.coordinates[0];
     for (let indexObj = 0; indexObj < objectTypes.length; indexObj++) {
