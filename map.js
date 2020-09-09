@@ -31,12 +31,6 @@ module.exports = function (tileLayers, tile, writeData, done) {
   result.properties['length'] = 0
   result.properties['point'] = 0
 
-  // objectTypes.forEach(type => {
-  //   result.properties[`${type}-area`] = 0;
-  //   result.properties[`${type}-distance`] = 0;
-  //   result.properties[`${type}-point`] = 0;
-  // });
-
   for (let i = 0; i < layer.features.length; i++) {
     const feature = layer.features[i];
     //calculate population
@@ -79,22 +73,7 @@ module.exports = function (tileLayers, tile, writeData, done) {
     return v > 0;
   });
 
-
   if (values.length > 0) {
-    // // Remove unsed attributes
-    // _.keys(result.properties).forEach(k => {
-    //   if (k !== 'tile' && k !== 'population') {
-    //     if (k.split('-')[1] =='distance'){
-    //       result.properties['length'] += parseFloat(result.properties[''])
-    //       result.properties['point'] = 0
-    //       result.properties['area'] = parseFloat
-
-    //     }
-        
-    //     delete result.properties[k];
-    //   }
-    // });
-
     writeData(JSON.stringify(result) + '\n');
   }
   done(null, null);
